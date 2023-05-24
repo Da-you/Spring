@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureGraphQlTester;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import studt.datajpa.dto.MemberDto;
@@ -167,8 +170,53 @@ class MemberRepositoryTest {
         System.out.println("aaa1 = " + aaa1);
         Optional<Member> aaa2 = memberRepository.findOptionalByUsername("aaa");
         System.out.println("aaa2 = " + aaa2);
+    }
+
+    @Test
+    public void paging(){
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 10));
+        memberRepository.save(new Member("member3", 10));
+        memberRepository.save(new Member("member4", 10));
+        memberRepository.save(new Member("member5", 10));
+        memberRepository.save(new Member("member6", 10));
+
+        int age = 10;
+       PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+
+        Page<Member> page = memberRepository.findByAge(age,pageRequest);
+
+       Page<MemberDto> toMap =  page.map( m -> new MemberDto(m.getId(), m.getUsername(), null));
+
+        List<Member> content = page.getContent();
+        long totalElements = page.getTotalElements();
 
 
+        assertThat(content.size()).isEqualTo(3);
+        assertThat(page.getTotalElements()).isEqualTo(6);
+        assertThat(page.getNumber()).isEqualTo(0);
+        assertThat(page.getTotalPages()).isEqualTo(2);
+        assertThat(page.isFirst()).isTrue();
+        assertThat(page.hasNext()).isTrue();
+        for (Member member : content) {
+            System.out.println("member = " + member);
+        }
+        System.out.println("totalElements = " + totalElements);
+    }
 
+    @Test
+    public void bulkUpdate() {
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 19));
+        memberRepository.save(new Member("member3", 20));
+        memberRepository.save(new Member("member4", 21));
+        memberRepository.save(new Member("member5", 40));
+
+        int resultCount = memberRepository.bulkAgePlus(20);
+        List<Member> result = memberRepository.findByUsername("member5");
+        Member member5 = result.get(0); // 40 -> 41
+        System.out.println("member5 = " + member5); //  벌크 연산시에는 꼭 영속성 컨텍스트를 비워줘야한다. 디비에는 변경이 반영되었더라도 벌크쿼리는 영속성 컨텍스트를 무시한다.
+
+        assertThat(resultCount).isEqualTo(3);
     }
 }
