@@ -15,6 +15,8 @@ import studt.datajpa.dto.MemberDto;
 import studt.datajpa.entity.Member;
 import studt.datajpa.entity.Team;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,12 +29,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @Rollback(false)
-class MemberRepositoryTest {
+class  MemberRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
     @Autowired
     TeamRepository teamRepository;
+    @PersistenceContext
+    EntityManager em;
 
     @Test
     void testMember() {
@@ -218,5 +222,56 @@ class MemberRepositoryTest {
         System.out.println("member5 = " + member5); //  벌크 연산시에는 꼭 영속성 컨텍스트를 비워줘야한다. 디비에는 변경이 반영되었더라도 벌크쿼리는 영속성 컨텍스트를 무시한다.
 
         assertThat(resultCount).isEqualTo(3);
+    }
+
+    @Test
+    public void findMemberLazy(){
+        //given
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+        teamRepository.save(teamA); // 영속성 컨텍스트에 저장
+        teamRepository.save(teamB); // 영속성 컨텍스트에 저장
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 10, teamB);
+        memberRepository.save(member1); // 영속성 컨텍스트에 저장
+        memberRepository.save(member2); // 영속성 컨텍스트에 저장
+
+        em.flush();
+        em.clear();
+
+        //when N + 1 문제
+//        List<Member> members = memberRepository.findMemberFetchJoin();
+        List<Member> members = memberRepository.findAll();
+
+        for (Member member : members) {
+            System.out.println("member = " + member.getUsername());
+            System.out.println("member.teamClass = " + member.getTeam().getClass()); // 프록시 객체
+            System.out.println("member.team = " + member.getTeam().getName()); // 실제 객체
+        }
+    }
+
+    @Test
+    public void quertHint(){
+        Member member1 = new Member("member1", 10);
+        memberRepository.save(member1);
+
+        em.flush();
+        em.clear();
+
+        Member findMember = memberRepository.findReadOnlyByUsername("member1");
+        findMember.setUsername("member2"); // 변경감지가 되지 않는다.
+
+        em.flush();
+    }
+
+    @Test
+    public void lock(){
+        Member member1 = new Member("member1", 10);
+        memberRepository.save(member1);
+
+        em.flush();
+        em.clear();
+
+        List<Member> result = memberRepository.findLockByUsername("member1");
     }
 }
