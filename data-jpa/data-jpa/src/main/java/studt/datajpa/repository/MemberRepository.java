@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long>,
-        MemberRepositoryCustom {
+        MemberRepositoryCustom, JpaSpecificationExecutor<Member> {
     List<Member> findByUsernameAndAgeGreaterThan(String username, int age);
 
     @Query(name = "Member.findByUsername")
@@ -63,12 +63,25 @@ public interface MemberRepository extends JpaRepository<Member, Long>,
     @EntityGraph("Member.all")
     @Query("select m from Member m")
     List<Member> findMemberEntityGraph();
+    List<UsernameOnly> findProjectionsByUsername(String username);
+
+    <T> List<T> findProjectionsDtoByUsername(String username, Class<T> type);
 
     @QueryHints(value = @QueryHint(name = "org.hibernate.readOnly", value = "true"))
     Member findReadOnlyByUsername(String ueername);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Member> findLockByUsername(String username);
+
+    @Query(value = "select * from member where username = ?", nativeQuery =
+            true)
+    Member findByNativeQuery(String username);
+
+    @Query(value = "SELECT m.member_id as id, m.username, t.name as teamName " +
+            "FROM member m left join team t ",
+            countQuery = "SELECT count(*) from member",
+            nativeQuery = true)
+    Page<MemberProjections > findByNativeProjection(Pageable pageable);
 
 
 }
