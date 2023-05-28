@@ -162,7 +162,7 @@ class  MemberRepositoryTest {
     }
 
     @Test
-    public void returnType(){
+    public void returnType() {
         Member m1 = new Member("aaa", 10);
         Member m2 = new Member("bbb", 20);
         memberRepository.save(m1);
@@ -177,7 +177,7 @@ class  MemberRepositoryTest {
     }
 
     @Test
-    public void paging(){
+    public void paging() {
         memberRepository.save(new Member("member1", 10));
         memberRepository.save(new Member("member2", 10));
         memberRepository.save(new Member("member3", 10));
@@ -186,11 +186,11 @@ class  MemberRepositoryTest {
         memberRepository.save(new Member("member6", 10));
 
         int age = 10;
-       PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
 
-        Page<Member> page = memberRepository.findByAge(age,pageRequest);
+        Page<Member> page = memberRepository.findByAge(age, pageRequest);
 
-       Page<MemberDto> toMap =  page.map( m -> new MemberDto(m.getId(), m.getUsername(), null));
+        Page<MemberDto> toMap = page.map(m -> new MemberDto(m.getId(), m.getUsername(), null));
 
         List<Member> content = page.getContent();
         long totalElements = page.getTotalElements();
@@ -225,7 +225,7 @@ class  MemberRepositoryTest {
     }
 
     @Test
-    public void findMemberLazy(){
+    public void findMemberLazy() {
         //given
         Team teamA = new Team("teamA");
         Team teamB = new Team("teamB");
@@ -251,7 +251,7 @@ class  MemberRepositoryTest {
     }
 
     @Test
-    public void quertHint(){
+    public void quertHint() {
         Member member1 = new Member("member1", 10);
         memberRepository.save(member1);
 
@@ -265,7 +265,7 @@ class  MemberRepositoryTest {
     }
 
     @Test
-    public void lock(){
+    public void lock() {
         Member member1 = new Member("member1", 10);
         memberRepository.save(member1);
 
@@ -273,5 +273,30 @@ class  MemberRepositoryTest {
         em.clear();
 
         List<Member> result = memberRepository.findLockByUsername("member1");
+    }
+
+    @Test
+    public void callCustom() {
+        List<Member> result = memberRepository.findMemberCustom();
+    }
+
+    @Test
+    public void JpaEventBaseEntity() throws InterruptedException {
+        //given
+        Member member1 = new Member("member1", 10);
+        memberRepository.save(member1); // @PrePersist
+
+        Thread.sleep(100);
+        member1.setUsername("member2");
+
+        em.flush();// @PreUpdate
+        em.clear();
+        //when
+        Member findMember = memberRepository.findById(member1.getId()).get();
+        //then
+        findMember.getCreatedDate();
+        System.out.println("findMember.getUpdatedDate() = " + findMember.getUpdatedDate());
+        findMember.getUpdatedDate();
+        System.out.println("findMember.getCreatedDate() = " + findMember.getCreatedDate());
     }
 }
