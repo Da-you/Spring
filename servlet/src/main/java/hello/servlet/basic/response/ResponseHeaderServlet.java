@@ -1,5 +1,6 @@
 package hello.servlet.basic.response;
 
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
@@ -49,7 +50,7 @@ public class ResponseHeaderServlet extends HttpServlet {
         //response.setHeader("Set-Cookie", "myCookie=good; Max-Age=600");
         Cookie cookie = new Cookie("myCookie", "good");
         cookie.setMaxAge(600); //600초
-        response.addCookie(new jakarta.servlet.http.Cookie("myCookie", "good"));
+        response.addCookie(new Cookie("myCookie", "good"));
 
     }
 
