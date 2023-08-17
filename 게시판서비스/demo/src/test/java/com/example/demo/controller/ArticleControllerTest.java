@@ -36,7 +36,7 @@ class ArticleControllerTest {
     void givenNothing_whenRequestingArticleView_thenReturnArticleView() throws Exception {
         mvc.perform(get("/articles/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_HTML))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(view().name("articles/detail"))
                 .andExpect(model().attributeExists("article"))
                 .andExpect(model().attributeExists("articleComments"));
@@ -46,7 +46,7 @@ class ArticleControllerTest {
     void givenNothing_whenRequestingArticleSearchView_thenReturnArticleView() throws Exception {
         mvc.perform(get("/articles/search "))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_HTML))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(model().attributeExists("articles/search"));
      }
     @Test
@@ -54,7 +54,7 @@ class ArticleControllerTest {
     void givenNothing_whenRequestingArticleHashtagSearchView_thenReturnArticleView() throws Exception {
         mvc.perform(get("/articles/search-hashtag"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_HTML))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(model().attributeExists("articles/search-hashtag"));
 
     }
