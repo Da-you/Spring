@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @ToString
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class) // JPA Auditing을 사용하기 위해 추가
-public class AuditingFields {
+public abstract class AuditingFields {
 
     @CreatedDate
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
