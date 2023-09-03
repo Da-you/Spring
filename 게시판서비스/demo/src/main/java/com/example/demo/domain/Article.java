@@ -29,6 +29,10 @@ public class Article extends AuditingFields {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Setter
+    @JoinColumn(name = "userId")
+    @ManyToOne(optional = false)
+    private UserAccount userAccount; // 유저 정보 (ID)
+    @Setter
     @Column(nullable = false)
     private String title;
     @Setter
@@ -43,6 +47,15 @@ public class Article extends AuditingFields {
 
     protected Article() {
         // 외부에 노출하지 않기 위해 protected로 생성자 생성
+    }
+    private Article(UserAccount userAccount, String title, String content) {
+        this.userAccount = userAccount;
+        this.title = title;
+        this.content = content;
+    }
+
+    public static Article of(UserAccount userAccount, String title, String content) {
+        return new Article(userAccount, title, content);
     }
 
     // 생성자를 통해 값을 받아옴

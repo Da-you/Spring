@@ -21,7 +21,7 @@ import static org.mockito.BDDMockito.*;
 
 @DisplayName("비즈니스 로직 - 댓글 ")
 @ExtendWith(MockitoExtension.class)
-class ArticleCommentServiceTest {
+class  ArticleCommentServiceTest {
     @InjectMocks
     private ArticleCommentService sut;
     @Mock
@@ -30,6 +30,7 @@ class ArticleCommentServiceTest {
     private ArticleCommentRepository articleCommentRepo;
 
     @Test
+    @DisplayName("게시글 ID로 조회하면, 해당하는 댓글 리스트를 반환한다.")
     void givenArticleId_whenSearchingArticleComments_thenReturnsArticleComments() {
         // given
         Long articleId = 1l;
@@ -43,7 +44,8 @@ class ArticleCommentServiceTest {
         then(articleRepo).should().findById(articleId);
     }
     @Test
-    void givenArticleId_whenSearchingArticleComments_thenReturnsArticleComments() {
+    @DisplayName("댓글 정보를 입력하면, 댓글을 저장한다.")
+    void givenArticleCommentInfo_whenSavingArticleComment_thenSavesArticleComment() {
         // given
         Long articleId = 1l;
         given(articleRepo.findById(articleId)).willReturn(Optional.of(
