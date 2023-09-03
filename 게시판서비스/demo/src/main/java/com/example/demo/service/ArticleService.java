@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.ArticleDto;
+import com.example.demo.dto.ArticleUpdateDto;
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.type.SearchType;
 import lombok.RequiredArgsConstructor;
@@ -23,5 +24,15 @@ public class ArticleService {
     @Transactional(readOnly = true)
     public ArticleDto searchArticle(long l) {
         return null;
+    }
+
+    public void saveArticle(ArticleDto dto) {
+
+    }
+
+    public void updateArticle(long articleId , ArticleUpdateDto dto) {
+    }
+
+    public void deleteArticle(long articleId) {
     }
 }
