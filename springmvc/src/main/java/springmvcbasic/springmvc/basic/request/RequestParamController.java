@@ -4,10 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import springmvcbasic.springmvc.basic.HelloData;
 
 import java.io.IOException;
 import java.util.Map;
@@ -32,6 +30,7 @@ public class RequestParamController {
         log.info("username={}, age={}", memberName, memberAge);
         return "ok";
     }
+
     @ResponseBody // view 조회를 무시하고 HTTP message body에 직접 해당 내용 입력
     @RequestMapping("/request-param-v3")
     public String requestParamV3(
@@ -40,6 +39,7 @@ public class RequestParamController {
         log.info("username={}, age={}", username, age);
         return "ok";
     }
+
     @ResponseBody // view 조회를 무시하고 HTTP message body에 직접 해당 내용 입력
     @RequestMapping("/request-param-v4")
     // String, int, Integer 등의 단순 타입이면 @RequestParam 도 생략 가능
@@ -47,6 +47,7 @@ public class RequestParamController {
         log.info("username={}, age={}", username, age);
         return "ok";
     }
+
     @ResponseBody // view 조회를 무시하고 HTTP message body에 직접 해당 내용 입력
     @RequestMapping("/request-param-required")
     // String, int, Integer 등의 단순 타입이면 @RequestParam 도 생략 가능
@@ -54,6 +55,7 @@ public class RequestParamController {
         log.info("username={}, age={}", username, age);
         return "ok";
     }
+
     @ResponseBody // view 조회를 무시하고 HTTP message body에 직접 해당 내용 입력
     @RequestMapping("/request-param-default")
     // String, int, Integer 등의 단순 타입이면 @RequestParam 도 생략 가능
@@ -61,12 +63,42 @@ public class RequestParamController {
         log.info("username={}, age={}", username, age);
         return "ok";
     }
+
     @ResponseBody // view 조회를 무시하고 HTTP message body에 직접 해당 내용 입력
     @RequestMapping("/request-param-map")
     // String, int, Integer 등의 단순 타입이면 @RequestParam 도 생략 가능
     public String requestParamMap(@RequestParam Map<String, Object> paramMap) {
 
         log.info("username={}, age={}", paramMap.get("username"), paramMap.get("age"));
+        return "ok";
+    }
+
+    /**
+     * @ModelAttribute 사용
+     * 참고: model.addAttribute(helloData) 코드도 함께 자동 적용됨, 뒤에 model 관련 부분에서 자세히 설명
+     */
+//    @RequestMapping("/model-attribute-v1")
+//    public String modelAttributeV1(@RequestParam String username, @RequestParam int age){
+//        HelloData helloData = new HelloData();
+//        helloData.setUsername(username);
+//        helloData.setAge(age);
+//        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
+//        return "ok";
+//    }
+    @RequestMapping("/model-attribute-v1")
+    public String modelAttributeV1(@ModelAttribute HelloData helloData) {
+        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
+        return "ok";
+    }
+
+    /**
+     * @ModelAttribute 생략 가능
+     * String, int, Integer 같은 단순 타입 = @RequestParam
+     * argument resolver 로 지정해둔 타입 외 = @ModelAttribute
+     */
+    @RequestMapping("/model-attribute-v2")
+    public String modelAttributeV2(HelloData helloData) {
+        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
         return "ok";
     }
 }
