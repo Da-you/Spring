@@ -11,7 +11,8 @@ import hello.core.order.OrderServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+// 스프링 설정정보는 항상 @Configuration을 붙여야 한다.
+@Configuration // 애플리케이션의 설정 정보라는 의미, CGLIB라는 라이브러리를 사용해 싱글톤을 보장해줌
 public class AppConfig {
     @Bean
     public MemberService memberService() {
