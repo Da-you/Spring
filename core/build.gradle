@@ -17,11 +17,19 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
+
+	//web 라이브러리 추가
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	//자바표준 provider 사용을위한 라이브러리
+	implementation 'javax.inject:javax.inject:1'
+
+	//lombok 라이브러리 추가
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
