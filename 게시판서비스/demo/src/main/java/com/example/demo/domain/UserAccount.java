@@ -16,6 +16,7 @@ import java.util.Objects;
 })
 @Entity
 public class UserAccount extends AuditingFields{
+    @Id
     @Column(length = 50)
     private String userId;
 
