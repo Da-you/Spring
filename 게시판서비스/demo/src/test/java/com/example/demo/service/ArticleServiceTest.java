@@ -15,9 +15,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.* ;
 import static org.mockito.BDDMockito.*;
@@ -127,6 +129,20 @@ class ArticleServiceTest {
     private Article createArticle() {
         return createArticle(1L);
     }
+//    private Article createArticle(Long id) {
+//        Article article = Article.of(
+//                createUserAccount(),
+//                "title",
+//                "content"
+//        );
+//        article.addHashtags(Set.of(
+//                createHashtag(1L, "java"),
+//                createHashtag(2L, "spring")
+//        ));
+//        ReflectionTestUtils.setField(article, "id", id);
+//
+//        return article;
+//    }
 
     private UserAccount createUserAccount() {
         return createUserAccount("uno");
