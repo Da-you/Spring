@@ -2,11 +2,11 @@ package com.example.demo.service;
 
 import com.example.demo.domain.Article;
 import com.example.demo.domain.UserAccount;
+import com.example.demo.domain.type.SearchType;
 import com.example.demo.dto.ArticleDto;
 import com.example.demo.dto.ArticleWithCommentsDto;
 import com.example.demo.dto.UserAccountDto;
 import com.example.demo.repository.ArticleRepository;
-import com.example.demo.type.SearchType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,9 +15,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -61,6 +61,37 @@ class ArticleServiceTest {
         assertThat(articles).isEmpty();
         then(articleRepository).should().findByTitleContaining(searchKeyword, pageable);
     }
+    @DisplayName("검색어 없이 게시글을 검색하면, 페이지를 반환한다.")
+    @Test
+    void givenNoSearchParameters_whenSearchingArticlesViaHashtag_thenReturnsArticleEmptyPage() {
+        // Given
+        Pageable pageable = Pageable.ofSize(20);
+
+        // When
+        Page<ArticleDto> articles = sut.searchArticlesViaHashtag(null, pageable);
+
+        // Then
+        assertThat(articles).isEmpty();
+        then(articleRepository).shouldHaveNoInteractions(); // 상호작용이 없어야 한다.
+    }
+
+    @DisplayName("게시글을 해시태그 검색하면, 게시글 페이지를 반환한다.")
+    @Test
+    void givenHashtag_whenSearchingArticlesViaHashtag_thenReturnsArticlesPage() {
+        // Given
+        String hashtag = "#java";
+        Pageable pageable = Pageable.ofSize(20);
+        given(articleRepository.findByHashtag(hashtag, pageable)).willReturn(Page.empty());
+
+        // When
+        Page<ArticleDto> articles = sut.searchArticlesViaHashtag(hashtag, pageable);
+
+        // Then
+        assertThat(articles).isEmpty();
+        then(articleRepository).should().findByHashtag(hashtag,pageable); // 상호작용이 없어야 한다.
+    }
+
+
 
 
     @DisplayName("게시글을 조회하면, 게시글을 반환한다.")
@@ -125,6 +156,23 @@ class ArticleServiceTest {
         // then
         then(articleRepository).should().delete(any(Article.class));
     }
+
+    @DisplayName("해시태그를 조회하면, 유니크 해시태그 리스트를 반환한다.")
+    @Test
+    void givenNothing_whenCalling_thenReturnsHashtags() {
+        // Given
+        Article article = createArticle();
+        List<String> expectedHashtags = List.of("java", "spring", "boot");
+        given(articleRepository.findAllDistinctHashtags()).willReturn(expectedHashtags);
+
+        // When
+        List<String> actualHashtags = sut.getHashtags();
+
+        // Then
+        assertThat(actualHashtags).isEqualTo(expectedHashtags);
+        then(articleRepository).should().findAllDistinctHashtags();
+    }
+
 
     private Article createArticle() {
         return createArticle(1L);

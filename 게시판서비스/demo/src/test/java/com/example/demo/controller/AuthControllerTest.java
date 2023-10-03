@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.config.SecurityConfig;
+import com.example.demo.config. SecurityConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

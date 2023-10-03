@@ -1,11 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.domain.Article;
+import com.example.demo.domain.type.SearchType;
 import com.example.demo.dto.ArticleDto;
 import com.example.demo.dto.ArticleUpdateDto;
 import com.example.demo.dto.ArticleWithCommentsDto;
 import com.example.demo.repository.ArticleRepository;
-import com.example.demo.type.SearchType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -68,5 +68,16 @@ public class ArticleService {
 
     public void deleteArticle(long articleId) {
         articleRepository.deleteById(articleId);
+    }
+@Transactional(readOnly = true)
+    public Page<ArticleDto> searchArticlesViaHashtag(String  hashtag, Pageable pageable) {
+        if (hashtag == null || hashtag.isBlank()) {
+            return Page.empty(pageable);
+        }
+        return articleRepository.findByHashtag(hashtag, pageable).map(ArticleDto::from);
+    }
+
+    public List<String> getHashtags() {
+        return articleRepository.findAllDistinctHashtags();
     }
 }
