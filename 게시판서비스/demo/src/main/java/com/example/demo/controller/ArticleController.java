@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.type.SearchType;
-import com.example.demo.dto.ArticleResponse;
-import com.example.demo.dto.ArticleWithCommentsResponse;
+import com.example.demo.dto.response.ArticleResponse;
+import com.example.demo.dto.response.ArticleWithCommentsResponse;
 import com.example.demo.service.ArticleService;
 import com.example.demo.service.PaginationService;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +61,46 @@ public class ArticleController {
         map.addAttribute("paginationBarNumbers", barNumbers);
         map.addAttribute("searchType ", SearchType.HASHTAG);
         return "articles/search-hashtag";
+    }
+    @PostMapping("/form")
+    public String postNewArticle(
+            @AuthenticationPrincipal BoardPrincipal boardPrincipal,
+            ArticleRequest articleRequest
+    ) {
+        articleService.saveArticle(articleRequest.toDto(boardPrincipal.toDto()));
+
+        return "redirect:/articles";
+    }
+
+    @GetMapping("/{articleId}/form")
+    public String updateArticleForm(@PathVariable Long articleId, ModelMap map) {
+        ArticleResponse article = ArticleResponse.from(articleService.getArticle(articleId));
+
+        map.addAttribute("article", article);
+        map.addAttribute("formStatus", FormStatus.UPDATE);
+
+        return "articles/form";
+    }
+
+    @PostMapping("/{articleId}/form")
+    public String updateArticle(
+            @PathVariable Long articleId,
+            @AuthenticationPrincipal BoardPrincipal boardPrincipal,
+            ArticleRequest articleRequest
+    ) {
+        articleService.updateArticle(articleId, articleRequest.toDto(boardPrincipal.toDto()));
+
+        return "redirect:/articles/" + articleId;
+    }
+
+    @PostMapping("/{articleId}/delete")
+    public String deleteArticle(
+            @PathVariable Long articleId,
+            @AuthenticationPrincipal BoardPrincipal boardPrincipal
+    ) {
+        articleService.deleteArticle(articleId, boardPrincipal.getUsername());
+
+        return "redirect:/articles";
     }
 
 }

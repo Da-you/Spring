@@ -1,4 +1,6 @@
-package com.example.demo.dto;
+package com.example.demo.dto.response;
+
+import com.example.demo.dto.ArticleCommentDto;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;

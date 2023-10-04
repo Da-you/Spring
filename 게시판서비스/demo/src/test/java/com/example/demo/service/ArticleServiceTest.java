@@ -21,15 +21,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.* ;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 @DisplayName("비즈니스 로직 - 게시글")
 @ExtendWith(MockitoExtension.class)
 class ArticleServiceTest {
 
-    @InjectMocks private ArticleService sut;
-    @Mock private ArticleRepository articleRepository;
+    @InjectMocks
+    private ArticleService sut;
+    @Mock
+    private ArticleRepository articleRepository;
 
     @Test
     @DisplayName("검색어 없이 게시글을 검색하면, 게시글 페이지를 반환한다.")
@@ -45,6 +47,7 @@ class ArticleServiceTest {
         assertThat(articles).isEmpty();
         then(articleRepository).should().findAll(pageable);
     }
+
     @DisplayName("검색어와 함께 게시글을 검색하면, 게시글 페이지를 반환한다.")
     @Test
     void givenSearchParameters_whenSearchingArticles_thenReturnsArticlePage() {
@@ -61,6 +64,7 @@ class ArticleServiceTest {
         assertThat(articles).isEmpty();
         then(articleRepository).should().findByTitleContaining(searchKeyword, pageable);
     }
+
     @DisplayName("검색어 없이 게시글을 검색하면, 페이지를 반환한다.")
     @Test
     void givenNoSearchParameters_whenSearchingArticlesViaHashtag_thenReturnsArticleEmptyPage() {
@@ -88,10 +92,8 @@ class ArticleServiceTest {
 
         // Then
         assertThat(articles).isEmpty();
-        then(articleRepository).should().findByHashtag(hashtag,pageable); // 상호작용이 없어야 한다.
+        then(articleRepository).should().findByHashtag(hashtag, pageable); // 상호작용이 없어야 한다.
     }
-
-
 
 
     @DisplayName("게시글을 조회하면, 게시글을 반환한다.")
@@ -119,8 +121,8 @@ class ArticleServiceTest {
     void givenArticleInfo_whenSavingArticle_thenSavesArticle() {
         // given
         ArticleDto dto = createArticleDto();
-         //  mockito를 사용하여 articleRepository.save(dto)가 호출되었는지 검증
-       given(articleRepository.save(any(Article.class))).willReturn(null); // articleRepository.save(dto)가 호출되었는지 검증
+        //  mockito를 사용하여 articleRepository.save(dto)가 호출되었는지 검증
+        given(articleRepository.save(any(Article.class))).willReturn(null); // articleRepository.save(dto)가 호출되었는지 검증
         // when
         sut.saveArticle(dto); // 제목, 본문,ID,닉네임, 해시태그
         // then
@@ -132,16 +134,16 @@ class ArticleServiceTest {
     void givenArticleIdANDModifiedInfo_whenSavingArticle_thenUpdatesArticle() {
         // given
         Article article = createArticle();
-        ArticleDto dto = createArticleDto("새 제목","본문");
+        ArticleDto dto = createArticleDto("새 제목", "본문");
         //  mockito를 사용하여 articleRepository.save(dto)가 호출되었는지 검증
         given(articleRepository.getReferenceById(dto.id())).willReturn(article); // articleRepository.save(dto)가 호출되었는지 검증
         // when
-        sut.updateArticle (dto); // 제목, 본문,ID,닉네임, 해시태그
+        sut.updateArticle(dto); // 제목, 본문,ID,닉네임, 해시태그
         // then
         assertThat(article)
                 .hasFieldOrPropertyWithValue("title", dto.title())
-                        .hasFieldOrPropertyWithValue("content", dto.content())
-                                .hasFieldOrPropertyWithValue("hashtag", dto.hashTag());
+                .hasFieldOrPropertyWithValue("content", dto.content())
+                .hasFieldOrPropertyWithValue("hashtag", dto.hashTag());
         then(articleRepository).should().getReferenceById(dto.id());
     }
 
@@ -152,7 +154,7 @@ class ArticleServiceTest {
         //  mockito를 사용하여 articleRepository.save(dto)가 호출되었는지 검증
         willDoNothing().given(articleRepository.save(any(Article.class))); // articleRepository.save(dto)가 호출되었는지 검증
         // when
-        sut.deleteArticle (1L); // 제목, 본문,ID,닉네임, 해시태그
+        sut.deleteArticle(1L); // 제목, 본문,ID,닉네임, 해시태그
         // then
         then(articleRepository).should().delete(any(Article.class));
     }
@@ -205,6 +207,7 @@ class ArticleServiceTest {
                 null
         );
     }
+
     private ArticleDto createArticleDto() {
         return createArticleDto("title", "content");
     }
@@ -222,6 +225,7 @@ class ArticleServiceTest {
                 LocalDateTime.now(),
                 "Uno");
     }
+
     private UserAccountDto createUserAccountDto() {
         return UserAccountDto.of(
                 "uno",
@@ -235,7 +239,6 @@ class ArticleServiceTest {
                 "uno"
         );
     }
-
 
 
 }

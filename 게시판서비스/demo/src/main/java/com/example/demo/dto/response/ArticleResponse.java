@@ -1,8 +1,8 @@
-package com.example.demo.dto;
+package com.example.demo.dto.response;
+
+import com.example.demo.dto.ArticleDto;
 
 import java.time.LocalDateTime;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public record ArticleResponse(
         Long id,
