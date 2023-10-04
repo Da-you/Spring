@@ -1,10 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.controller.ArticleCommentController;
+
+import com.example.demo.config.TestSecurityConfig;
 import com.example.demo.dto.ArticleCommentDto;
 import com.example.demo.dto.request.ArticleCommentRequest;
 import com.example.demo.service.ArticleCommentService;
-import com.fastcampus.projectboard.util.FormDataEncoder;
+import com.example.demo.util.FormDataEncoder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ class ArticleCommentControllerTest {
     @MockBean private ArticleCommentService articleCommentService;
 
 
-    ArticleCommentControllerTest(
+    public ArticleCommentControllerTest(
             @Autowired MockMvc mvc,
             @Autowired FormDataEncoder formDataEncoder
     ) {
@@ -89,28 +90,6 @@ class ArticleCommentControllerTest {
                 .andExpect(view().name("redirect:/articles/" + articleId))
                 .andExpect(redirectedUrl("/articles/" + articleId));
         then(articleCommentService).should().deleteArticleComment(articleCommentId, userId);
-    }
-
-    @WithUserDetails(value = "unoTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)
-    @DisplayName("[view][POST] 대댓글 등록 - 정상 호출")
-    @Test
-    void givenArticleCommentInfoWithParentCommentId_whenRequesting_thenSavesNewChildComment() throws Exception {
-        // Given
-        long articleId = 1L;
-        ArticleCommentRequest request = ArticleCommentRequest.of(articleId, 1L, "test comment");
-        willDoNothing().given(articleCommentService).saveArticleComment(any(ArticleCommentDto.class));
-
-        // When & Then
-        mvc.perform(
-                post("/comments/new")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .content(formDataEncoder.encode(request))
-                        .with(csrf())
-        )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/articles/" + articleId))
-                .andExpect(redirectedUrl("/articles/" + articleId));
-        then(articleCommentService).should().saveArticleComment(any(ArticleCommentDto.class));
     }
 
 }

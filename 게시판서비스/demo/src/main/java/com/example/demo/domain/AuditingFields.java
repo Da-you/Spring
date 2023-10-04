@@ -11,27 +11,31 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
+
 @Getter
 @ToString
+@EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class) // JPA Auditing을 사용하기 위해 추가
 public abstract class AuditingFields {
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @CreatedDate
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt; // 생성일시
+
     @CreatedBy
-    @Column(nullable = false, updatable = false ,length = 100)
-    String createdBy;
-    @LastModifiedDate
+    @Column(nullable = false, updatable = false, length = 100)
+    private String createdBy; // 생성자
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @LastModifiedDate
     @Column(nullable = false)
-    private LocalDateTime modifiedAt;
+    private LocalDateTime modifiedAt; // 수정일시
+
     @LastModifiedBy
     @Column(nullable = false, length = 100)
-    String modifiedBy;
+    private String modifiedBy; // 수정자
+
 }

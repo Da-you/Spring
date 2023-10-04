@@ -1,5 +1,6 @@
 package com.example.demo.dto;
 
+
 import com.example.demo.domain.UserAccount;
 
 import java.time.LocalDateTime;
@@ -47,4 +48,5 @@ public record UserAccountDto(
                 memo
         );
     }
+
 }

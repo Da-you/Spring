@@ -1,5 +1,6 @@
 package com.example.demo.dto.response;
 
+
 import com.example.demo.dto.ArticleDto;
 
 import java.time.LocalDateTime;
@@ -28,10 +29,11 @@ public record ArticleResponse(
                 dto.id(),
                 dto.title(),
                 dto.content(),
-                dto.hashTag(),
+                dto.hashtag(),
                 dto.createdAt(),
                 dto.userAccountDto().email(),
                 nickname
         );
     }
+
 }

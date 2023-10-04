@@ -1,6 +1,8 @@
 package com.example.demo.dto;
 
+
 import com.example.demo.domain.Article;
+import com.example.demo.dto.ArticleCommentDto;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
@@ -19,9 +21,7 @@ public record ArticleWithCommentsDto(
         LocalDateTime modifiedAt,
         String modifiedBy
 ) {
-    public static ArticleWithCommentsDto of(Long id, UserAccountDto
-            userAccountDto, Set<ArticleCommentDto> articleCommentDtos, String title, String content, String
-                                                    hashtag, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
+    public static ArticleWithCommentsDto of(Long id, UserAccountDto userAccountDto, Set<ArticleCommentDto> articleCommentDtos, String title, String content, String hashtag, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
         return new ArticleWithCommentsDto(id, userAccountDto, articleCommentDtos, title, content, hashtag, createdAt, createdBy, modifiedAt, modifiedBy);
     }
 
@@ -41,4 +41,5 @@ public record ArticleWithCommentsDto(
                 entity.getModifiedBy()
         );
     }
+
 }

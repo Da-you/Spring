@@ -11,15 +11,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
-@Configuration
 @EnableJpaAuditing
+@Configuration
 public class JpaConfig {
 
     @Bean
-    // String인 이유는 작성자의 이름을 넣을거기에 pk값을 넣는다면 Long으로 바꿔도 무방
-    public AuditorAware<String> auditorProvider() {
-        // 이 빈의 역할은 작성자를 넣어주는 역할을 한다.
-//        return () -> Optional.of("admin"); // Todo: 스프링 시큐리티로 인즈기능 이용시 수정
+    public AuditorAware<String> auditorAware() {
         return () -> Optional.ofNullable(SecurityContextHolder.getContext())
                 .map(SecurityContext::getAuthentication)
                 .filter(Authentication::isAuthenticated)
@@ -27,4 +24,5 @@ public class JpaConfig {
                 .map(BoardPrincipal.class::cast)
                 .map(BoardPrincipal::getUsername);
     }
+
 }
