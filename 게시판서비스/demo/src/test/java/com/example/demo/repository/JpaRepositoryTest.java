@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.domain.Article;
+import com.example.demo.domain.Hashtag;
 import com.example.demo.domain.UserAccount;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,7 +58,8 @@ class JpaRepositoryTest {
         // Given
         long previousCount = articleRepository.count();
         UserAccount userAccount = userAccountRepository.save(UserAccount.of("newUno", "pw", null, null, null));
-        Article article = Article.of(userAccount, "new article", "new content", "#spring");
+        Article article = Article.of(userAccount, "new article", "new content");
+        article.addHashtags(Set.of(Hashtag.of("spring")));
 
         // When
         articleRepository.save(article);
@@ -70,8 +73,10 @@ class JpaRepositoryTest {
     void givenTestData_whenUpdating_thenWorksFine() {
         // Given
         Article article = articleRepository.findById(1L).orElseThrow();
-        String updatedHashtag = "#springboot";
-        article.setHashtag(updatedHashtag);
+        Hashtag updatedHashtag = Hashtag.of("springboot");
+        article.clearHashtags();
+        article.addHashtags(Set.of(updatedHashtag));
+
 
         // When
         Article savedArticle = articleRepository.saveAndFlush(article);
