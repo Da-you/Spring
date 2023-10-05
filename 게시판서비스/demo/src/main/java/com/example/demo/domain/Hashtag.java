@@ -23,7 +23,7 @@ public class Hashtag extends AuditingFields {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ToString.Exclude
-    @ManyToMany(mappedBy = "hashstags")
+    @ManyToMany(mappedBy = "hashtags")
     private Set<Article> articles = new LinkedHashSet<>();
 
     @Setter
