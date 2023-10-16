@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
@@ -121,6 +122,27 @@ class ArticleCommentServiceTest {
         // Then
         then(articleCommentRepository).should().getReferenceById(dto.id());
     }
+    @DisplayName("부모 댓글 ID와 댓글 정보를 입력하면, 대댓글을 저장한다.")
+    @Test
+    void givenParentCommentIdAndArticleCommentInfo_whenSaving_thenSavesChildComment() {
+        // Given
+        Long parentCommentId = 1L;
+        ArticleComment parent = createArticleComment(parentCommentId, "댓글");
+        ArticleCommentDto child = createArticleCommentDto(parentCommentId, "대댓글");
+        given(articleRepository.getReferenceById(child.articleId())).willReturn(createArticle());
+        given(userAccountRepository.getReferenceById(child.userAccountDto().userId())).willReturn(createUserAccount());
+        given(articleCommentRepository.getReferenceById(child.parentCommentId())).willReturn(parent);
+
+        // When
+        sut.saveArticleComment(child);
+
+        // Then
+        assertThat(child.parentCommentId()).isNotNull();
+        then(articleRepository).should().getReferenceById(child.articleId());
+        then(userAccountRepository).should().getReferenceById(child.userAccountDto().userId());
+        then(articleCommentRepository).should().getReferenceById(child.parentCommentId());
+        then(articleCommentRepository).should(never()).save(any(ArticleComment.class));
+    }
 
     @DisplayName("댓글 ID를 입력하면, 댓글을 삭제한다.")
     @Test
@@ -139,16 +161,11 @@ class ArticleCommentServiceTest {
 
 
     private ArticleCommentDto createArticleCommentDto(String content) {
-        return ArticleCommentDto.of(
-                1L,
-                1L,
-                createUserAccountDto(),
-                content,
-                LocalDateTime.now(),
-                "uno",
-                LocalDateTime.now(),
-                "uno"
-        );
+        return createArticleCommentDto(null, content);
+    }
+
+    private ArticleCommentDto createArticleCommentDto(Long parentCommentId, String content) {
+        return createArticleCommentDto(1L, parentCommentId, content);
     }
 
     private UserAccountDto createUserAccountDto() {
@@ -165,12 +182,39 @@ class ArticleCommentServiceTest {
         );
     }
 
+
+    private ArticleCommentDto createArticleCommentDto(Long id, Long parentCommentId, String content) {
+        return ArticleCommentDto.of(
+                id,
+                1L,
+                createUserAccountDto(),
+                parentCommentId,
+                content,
+                LocalDateTime.now(),
+                "uno",
+                LocalDateTime.now(),
+                "uno"
+        );
+    }
+
+
+
     private ArticleComment createArticleComment(String content) {
         return ArticleComment.of(
                 createArticle(),
                 createUserAccount(),
                 content
         );
+    }
+    private ArticleComment createArticleComment(Long id, String content) {
+        ArticleComment articleComment = ArticleComment.of(
+                createArticle(),
+                createUserAccount(),
+                content
+        );
+        ReflectionTestUtils.setField(articleComment, "id", id);
+
+        return articleComment;
     }
 
     private UserAccount createUserAccount() {
