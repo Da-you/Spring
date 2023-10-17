@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("DTO - 댓글을 포함한 게시글 응답 테스트")
