@@ -37,7 +37,7 @@ public class UserAccount extends AuditingFields {
     protected UserAccount() {
     }
 
-    private UserAccount(String userId, String userPassword, String email, String nickname, String memo,String createdBy) {
+    private UserAccount(String userId, String userPassword, String email, String nickname, String memo, String createdBy) {
         this.userId = userId;
         this.userPassword = userPassword;
         this.email = email;
@@ -48,11 +48,11 @@ public class UserAccount extends AuditingFields {
     }
 
     public static UserAccount of(String userId, String userPassword, String email, String nickname, String memo) {
-        return new UserAccount(userId, userPassword, email, nickname, memo,null);
+        return UserAccount.of(userId, userPassword, email, nickname, memo, null);
     }
 
-    public static UserAccount of(String userId, String userPassword, String email, String nickname, String memo,String createdBy) {
-        return new UserAccount(userId, userPassword, email, nickname, memo,createdBy);
+    public static UserAccount of(String userId, String userPassword, String email, String nickname, String memo, String createdBy) {
+        return new UserAccount(userId, userPassword, email, nickname, memo, createdBy);
     }
 
 

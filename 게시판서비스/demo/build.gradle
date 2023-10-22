@@ -21,6 +21,7 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.springdoc:springdoc-springdoc-openapi-starter-webmvc-ui:2.2.0'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-rest' // Spring Data REST의 역할은 Spring Data JPA의 Repository 인터페이스를 통해 데이터를 조작할 수 있도록 REST API를 자동으로 생성해주는 것이다.
