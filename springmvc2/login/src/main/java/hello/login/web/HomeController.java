@@ -2,6 +2,7 @@ package hello.login.web;
 
 import hello.login.domain.member.Member;
 import hello.login.domain.member.MemberRepository;
+import hello.login.web.argumentresolver.Login;
 import hello.login.web.member.MemberController;
 import hello.login.web.session.SessionManager;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class HomeController {
         return "home";
     }
 
-//    @GetMapping("/")
+    //    @GetMapping("/")
     public String homeLogin(@CookieValue(name = "memberId", required = false) Long memberId, Model model) {
         if (memberId == null) {
             return "home";
@@ -44,9 +45,10 @@ public class HomeController {
         model.addAttribute("member", member);
         return "loginHome";
     }
-//    @GetMapping("/")
+
+    //    @GetMapping("/")
     public String homeLoginV2(HttpServletRequest request, Model model) {
-        Object member = (Member)sessionManager.getSession(request);
+        Object member = (Member) sessionManager.getSession(request);
 
         // 로그인
         if (member == null) {
@@ -56,13 +58,14 @@ public class HomeController {
         model.addAttribute("member", member);
         return "loginHome";
     }
+
     //@GetMapping("/")
     public String homeLoginV3(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
         if (session == null) {
             return "home";
         }
-        Object member =(Member)session.getAttribute(SessionConst.LOGIN_MEMBER);
+        Object member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
 
         // 로그인
         if (member == null) {
@@ -73,9 +76,9 @@ public class HomeController {
         return "loginHome";
     }
 
-    @GetMapping("/")
+    //    @GetMapping("/")
     public String homeLoginV3Spring(
-            @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false )Member member, Model model) {
+            @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member, Model model) {
 //        HttpSession session = request.getSession(false);
 //        if (session == null) {
 //            return "home";
@@ -90,5 +93,17 @@ public class HomeController {
 
         model.addAttribute("member", member);
         return "loginHome";
+    }
+
+    @GetMapping("/")
+    public String homeLoginV3ArgumentResolver(@Login Member member, Model model) {
+        // 로그인
+        if (member == null) {
+            return "home";
+        }
+
+        model.addAttribute("member", member);
+        return "loginHome";
+
     }
 }
