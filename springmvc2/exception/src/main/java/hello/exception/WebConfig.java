@@ -18,13 +18,13 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LogInterceptor( ))
+        registry.addInterceptor(new LogInterceptor())
                 .order(1)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/css/**", "/*.ico", "/error", "/error-page/**"); // 오류 페이지 경로 추가
     }
 
-//    @Bean
+    //    @Bean
     public FilterRegistrationBean logFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(new LogFilter()); // 필터 등록
@@ -36,6 +36,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
-        resolvers.add(new MyHandlerExceptionResolver( )); // 예외 처리기 추가 
+        resolvers.add(new MyHandlerExceptionResolver()); // 예외 처리기 추가
     }
 }
