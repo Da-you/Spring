@@ -1,5 +1,6 @@
 package hello.typeconverter.controller;
 
+import hello.typeconverter.type.IpPort;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,12 @@ public class HelloController {
     @GetMapping("/hello-v2")
     public String helloV2(@RequestParam Integer data){
         log.info("data={}", data);
+        return "ok";
+    }
+
+    @GetMapping("/ip-port")
+    public String ipPort(@RequestParam IpPort ipPort){
+        log.info("ipPort IP={}, port={}", ipPort.getIp(), ipPort.getPort());
         return "ok";
     }
 }
