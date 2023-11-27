@@ -39,7 +39,7 @@ public class UnCheckedTest {
     void unChecked_throw(){
       Service service = new Service();
       Assertions.assertThatThrownBy(()-> service.callThrow() )
-          .isInstanceOf(MyUnCheckedException.class);
+          .isInstanceOf(MyUnCheckedException.class); 
     }
 
     /**
