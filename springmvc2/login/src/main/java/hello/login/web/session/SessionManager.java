@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class SessionManager {
     private static final String SESSION_COOKIE_NAME = "mySessionId";
-    private Map<String, Object> sessionStore = new ConcurrentHashMap<>();
+    private Map<String, Object> sessionStore = new ConcurrentHashMap<>(); // 자동으로 동시성 문제를 해결해줌
 
     /**
      * 세션 생성

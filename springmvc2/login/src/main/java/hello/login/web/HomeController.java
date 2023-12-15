@@ -59,6 +59,9 @@ public class HomeController {
         return "loginHome";
     }
 
+    /**
+     * 스터디 예시 참고 코드
+     */
     //@GetMapping("/")
     public String homeLoginV3(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);

@@ -44,6 +44,10 @@ public class LoginController {
     }
 
 //    @PostMapping("/login")
+
+    /**
+     * 스터디 예시 참고 코드
+     */
     public String loginV2(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
             return "login/loginForm";
