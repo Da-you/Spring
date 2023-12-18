@@ -10,14 +10,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
+@Transactional
 @SpringBootTest
 class ItemRepositoryTest {
 
     @Autowired
     ItemRepository itemRepository;
+
+//    @Autowired
+//    PlatformTransactionManager transactionManager;
+//    TransactionStatus status;
+//
+//    @BeforeEach
+//    void beforeEach(){
+//        // 트랜잭션 시작
+//        status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+//    }
 
     @AfterEach
     void afterEach() {
@@ -25,6 +36,8 @@ class ItemRepositoryTest {
         if (itemRepository instanceof MemoryItemRepository) {
             ((MemoryItemRepository) itemRepository).clearStore();
         }
+        // 트랜잭션 롤백
+//        transactionManager.rollback(status);
     }
 
     @Test
@@ -36,7 +49,7 @@ class ItemRepositoryTest {
         Item savedItem = itemRepository.save(item);
 
         //then
-        Item findItem = itemRepository.findById(item.getId()).get();
+        Item findItem = itemRepository.findById(savedItem.getId()).get();
         assertThat(findItem).isEqualTo(savedItem);
     }
 
