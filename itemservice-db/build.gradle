@@ -25,6 +25,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc' //H2 데이터베이스 추가
+
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3' // 스프링 3.0 부터는 mybatis 3.0.1 버전 사용
 	runtimeOnly 'com.h2database:h2'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
