@@ -1,10 +1,9 @@
 //package jpabook.jpashop;
 //
 //import static org.assertj.core.api.Assertions.*;
-//import static org.junit.Assert.*;
 //
 //import jpabook.jpashop.domain.Member;
-//import org.assertj.core.api.Assertions;
+//import jpabook.jpashop.repository.MemberRepository;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +30,13 @@
 //  @Rollback(value = false) // @Transactional로 인한 롤백 거부
 //  public void testMember() {
 //    Member member = new Member();
-//    member.setUsername("memberA");
+//    member.setName("memberA");
 //
 //    Long saveId = memberRepository.save(member);
 //    Member findMembmer = memberRepository.find(saveId);
 //
 //    assertThat(findMembmer.getId()).isEqualTo(saveId);
-//    assertThat(findMembmer.getUsername()).isEqualTo(member.getUsername());
+//    assertThat(findMembmer.getName()).isEqualTo(member.getName());
 //    // 같은 영속성 컨텍스트 안에서 pk값이 같으면 같은 값으로 판단
 //    assertThat(findMembmer).isEqualTo(member);
 //    System.out.println("findMember == member :"+ (findMembmer == member));

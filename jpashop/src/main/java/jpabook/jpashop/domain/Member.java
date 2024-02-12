@@ -20,6 +20,7 @@ public class Member {
   @GeneratedValue
   @Column(name = "member_id")
   private Long id;
+  private String name;
   @Embedded
   private Address address;
   @OneToMany(mappedBy = "member") // Order에 있는 member의 거울? 읽기 전용?
