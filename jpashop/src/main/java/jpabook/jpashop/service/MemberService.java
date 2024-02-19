@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
   private final MemberRepository memberRepository;
+
   @Transactional
   public Long join(Member member) {
     validDuplicateMember(member);
@@ -34,5 +35,11 @@ public class MemberService {
 
   public Member findOne(Long memberId) {
     return memberRepository.find(memberId);
+  }
+
+  @Transactional
+  public void update(Long id, String name) {
+    Member member = memberRepository.find(id);
+    member.setName(name);
   }
 }
