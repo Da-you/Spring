@@ -75,7 +75,7 @@ public class OrderSimpleApiController {
       orderId = order.getId();
       name = order.getMember().getName(); // lazy초기화
       orderDate = order.getOrderDate();
-      orderStatus = order.getStatus();
+      orderStatus = order.getOrderStatus();
       address = order.getDelivery().getAddress(); // lazy초기화
     }
   }
