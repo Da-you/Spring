@@ -43,7 +43,7 @@ public class OrderQueryRepository {
     ).getResultList();
   }
 
-  // 2번의 쿼리 발생
+  // 2번의 쿼리 발생(루트 1번, 컬렉션 1번 O(1)성능)
   public List<OrderQueryDto> findAllByDto_optimization() {
     List<OrderQueryDto> result = findOrders();
 
@@ -72,5 +72,16 @@ public class OrderQueryRepository {
     return result.stream()
         .map(o -> o.getOrderId())
         .collect(Collectors.toList());
+  }
+// 1번위 쿼리
+  public List<OrderFlatDto> findAllByDto_flat() {
+    return em.createQuery(
+            "select new jpabook.jpashop.repository.order.query.OrderFlatDto(o.id, m.name, o.orderDate, o.orderStatus, d.address, i.name, oi.orderPrice, oi.count)" +
+                " from Order o" +
+                " join o.member m" +
+                " join o.delivery d" +
+                " join o.orderItems oi" +
+                " join oi.item i", OrderFlatDto.class)
+        .getResultList();
   }
 }
