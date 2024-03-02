@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.jaxb.SpringDataJaxb.OrderDto;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -51,6 +52,18 @@ public class OrderApiController {
   public List<OrderDto> ordersV3() {
     List<Order> orders = orderRepository.findAllWithItem();
     return orders.stream().map(OrderDto::new).collect(toList());
+  }
+
+  @GetMapping("/api/v3.1/orders")  // 페치 조인 적용
+  // 1 : N 을 페지 조인 하는 순간 페이징쿼리 불가능하니 일대다에서는 페치 조인 금지
+  // 일대다 (컬렉션)페치조인은 1개만 사용가능
+  public List<OrderDto> ordersV3_page(
+      @RequestParam(value = "offset", defaultValue = "0") int offset,
+      @RequestParam(value = "limit", defaultValue = "100") int limit
+  ) {
+    List<Order> orders = orderRepository.findAllWithMemberDelivery(offset, limit);
+    List<OrderDto> result = orders.stream().map(OrderDto::new).collect(toList());
+    return result;
   }
 
 
